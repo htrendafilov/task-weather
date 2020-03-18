@@ -1,0 +1,19 @@
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: weatherapp
+  spec:
+    selector:
+      matchLabels:
+        app: weather
+    replicas: 2
+    template:
+      metadata:
+        labels:
+          app: weather
+      spec:
+        containers:
+          - name: weatherapp
+            image: 733339657127.dkr.ecr.us-east-2.amazonaws.com/weatherapp:latest
+            ports:
+              - containerPort: 8080
