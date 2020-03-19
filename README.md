@@ -39,7 +39,7 @@ After pushing the image to **ECR** we can use `kubectl apply ...` to deploy the 
 
 ### Test it
 ```
-$ curl -s http://ae94f46cf522f48d6b46eab22da28b60-1816265173.us-east-2.elb.amazonaws.com:8080/weather/Sofia | jq .
+$ curl -s http://aee4f39d9c48b4c02acd1f313ad94374-1483124477.us-east-2.elb.amazonaws.com:8080/weather/Sofia | jq .
 {
   "cod": "200",
   "message": 0,
@@ -88,4 +88,26 @@ $ curl -s http://ae94f46cf522f48d6b46eab22da28b60-1816265173.us-east-2.elb.amazo
         "pressure": 1030,
         "sea_level": 1030,
 
+```
+
+### Helm Chart
+A Helm chart is also added in weatherapp folder.
+You can deploy the application using the command: ` helm install --namespace=weather weatherapp ./weatherapp`
+
+After that the application is deployed in the namespace `weather`
+
+```
+ kubectl --namespace=weather get all -o wide
+NAME                              READY   STATUS    RESTARTS   AGE     IP             NODE                                        NOMINATED NODE   READINESS GATES
+pod/weatherapp-564bd48d75-r9bvz   1/1     Running   0          2m47s   172.31.5.177   ip-172-31-6-95.us-east-2.compute.internal   <none>           <none>
+pod/weatherapp-564bd48d75-rsdgz   1/1     Running   0          2m47s   172.31.0.192   ip-172-31-6-95.us-east-2.compute.internal   <none>           <none>
+
+NAME                 TYPE           CLUSTER-IP     EXTERNAL-IP                                                               PORT(S)          AGE     SELECTOR
+service/weatherapp   LoadBalancer   10.100.49.25   aee4f39d9c48b4c02acd1f313ad94374-1483124477.us-east-2.elb.amazonaws.com   8080:31432/TCP   2m47s   app.kubernetes.io/instance=weatherapp,app.kubernetes.io/name=weatherapp
+
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES                                                          SELECTOR
+deployment.apps/weatherapp   2/2     2            2           2m47s   weatherapp   733339657127.dkr.ecr.us-east-2.amazonaws.com/weatherapp:0.1.3   app.kubernetes.io/instance=weatherapp,app.kubernetes.io/name=weatherapp
+
+NAME                                    DESIRED   CURRENT   READY   AGE     CONTAINERS   IMAGES                                                          SELECTOR
+replicaset.apps/weatherapp-564bd48d75   2         2         2       2m48s   weatherapp   733339657127.dkr.ecr.us-east-2.amazonaws.com/weatherapp:0.1.3   app.kubernetes.io/instance=weatherapp,app.kubernetes.io/name=weatherapp,pod-template-hash=564bd48d75
 ```
